@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Bags & Beauty - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --primary-dark: #6a1cb0;
+            --secondary: #ff69b4;
+            --accent: #00ced1;
+            --light: #f8f4ff;
+            --dark: #2d1b3d;
+            --text: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .admin-nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .admin-nav ul li {
+            margin-left: 2rem;
+        }
+
+        .admin-nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .admin-nav ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .admin-nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .admin-nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .admin-main {
+            padding: 8rem 0 4rem;
+            min-height: 100vh;
+        }
+
+        .admin-title {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .admin-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background: #f8f4ff;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table tr:hover {
+            background: #f8f4ff;
+        }
+
+        .action-btn {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+            margin-right: 0.5rem;
+        }
+
+        .btn-view {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-approve {
+            background: #2ed573;
+            color: white;
+        }
+
+        .form-row {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary);
+            border-color: var(--primary);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #ff4da6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        /* Login Form */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            padding: 2rem;
+        }
+
+        .login-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            font-size: 1.8rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .alert-error {
+            background: #ffeaea;
+            color: #d63031;
+            border: 1px solid #ffcccc;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .activity-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .activity-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-time {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .chart {
+            height: 300px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary), var(--secondary));
+            margin: 0 5px;
+            border-radius: 3px 3px 0 0;
+            position: relative;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .dashboard-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary-dark);
+                flex-direction: column;
+                padding: 1rem 0;
+                text-align: center;
+                box-shadow: var(--shadow);
+            }
+
+            .admin-nav ul.active {
+                display: flex;
+            }
+
+            .admin-nav ul li {
+                margin: 0.5rem 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .admin-tabs {
+                flex-direction: column;
+            }
+
+            .admin-tab {
+                text-align: left;
+                border-bottom: 1px solid #eee;
+                border-left: 3px solid transparent;
+            }
+
+            .admin-tab.active {
+                border-bottom: 1px solid #eee;
+                border-left: 3px solid var(--primary);
+            }
+
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login (shown by default) -->
+    <div class="login-container" id="login-container">
+        <div class="login-form">
+            <h2 class="login-title">Admin Login</h2>
+            <div class="alert alert-error" id="login-error" style="display: none;">
+                Invalid username or password. Please try again.
+            </div>
+            <form id="admin-login-form">
+                <div class="form-row">
+                    <label for="admin-username">Username</label>
+                    <input type="text" id="admin-username" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (hidden by default) -->
+    <div id="admin-dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-gem"></i>
+                        Soul<span>Bags</span> & Beauty - Admin
+                    </div>
+                    <nav class="admin-nav">
+                        <ul id="nav-menu">
+                            <li><a href="#" data-tab="dashboard">Dashboard</a></li>
+                            <li><a href="#" data-tab="messages">Messages</a></li>
+                            <li><a href="#" data-tab="portfolio">Portfolio</a></li>
+                            <li><a href="#" data-tab="users">Users</a></li>
+                            <li><a href="#" id="admin-logout">Logout</a></li>
+                        </ul>
+                        <div class="mobile-menu" id="mobile-menu">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="container">
+                <h1 class="admin-title" id="page-title">Admin Dashboard</h1>
+                
+                <!-- Dashboard Tab -->
+                <div class="tab-content active" id="dashboard-tab">
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-users">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-messages">0</div>
+                            <div class="stat-label">Messages Received</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-posts">0</div>
+                            <div class="stat-label">Portfolio Items</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="new-this-week">0</div>
+                            <div class="stat-label">New This Week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-overview">
+                        <div class="chart-container">
+                            <h3 class="chart-title">Monthly Visitors</h3>
+                            <div class="chart" id="visitors-chart">
+                                <!-- Chart bars will be generated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="recent-activity">
+                            <h3>Recent Activity</h3>
+                            <ul class="activity-list" id="activity-list">
+                                <!-- Activity items will be generated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Service Popularity</h3>
+                        <div class="chart" id="services-chart">
+                            <!-- Chart bars will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Messages Tab -->
+                <div class="tab-content" id="messages-tab">
+                    <h3>Customer Messages</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messages-table">
+                            <!-- Messages will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Portfolio Tab -->
+                <div class="tab-content" id="portfolio-tab">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3>Portfolio Items</h3>
+                        <button class="btn btn-primary" id="add-portfolio-btn">Add New Item</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Date Added</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolio-table">
+                            <!-- Portfolio items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Users Tab -->
+                <div class="tab-content" id="users-tab">
+                    <h3>Registered Users</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table">
+                            <!-- Users will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Portfolio Item Modal -->
+    <div class="modal" id="add-portfolio-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Portfolio Item</h3>
+                <button class="modal-close" id="close-portfolio-modal">&times;</button>
+            </div>
+            <form id="add-portfolio-form">
+                <div class="form-row">
+                    <label for="post-title">Title</label>
+                    <input type="text" id="post-title" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-category">Category</label>
+                    <select id="post-category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="clothing">Soul Bags Clothing</option>
+                        <option value="hair">Hair Styling</option>
+                        <option value="makeup">Makeup Artistry</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="post-image">Image URL</label>
+                    <input type="url" id="post-image" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <label for="post-description">Description</label>
+                    <textarea id="post-description" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add to Portfolio</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Message Modal -->
+    <div class="modal" id="view-message-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Message Details</h3>
+                <button class="modal-close" id="close-message-modal">&times;</button>
+            </div>
+            <div id="message-details">
+                <!-- Message details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Login
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            // Simple authentication (in a real app, this would be server-side)
+            if(username === 'admin' && password === 'admin123') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                loadAdminData();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        });
+        
+        // Admin Logout
+        document.getElementById('admin-logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('admin-dashboard').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('login-error').style.display = 'none';
+        });
+
+        // Navigation Tabs
+        document.querySelectorAll('.admin-nav a[data-tab]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to current tab and content
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                document.getElementById('page-title').textContent = this.textContent;
+                
+                // Close mobile menu if open
+                document.getElementById('nav-menu').classList.remove('active');
+            });
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+
+        // Modal Controls
+        document.getElementById('add-portfolio-btn').addEventListener('click', function() {
+            document.getElementById('add-portfolio-modal').style.display = 'flex';
+        });
+        
+        document.getElementById('close-portfolio-modal').addEventListener('click', function() {
+            document.getElementById('add-portfolio-modal').style.display = 'none';
+        });
+        
+        document.getElementById('close-message-modal').addEventListener('click', function() {
+            document.getElementById('view-message-modal').style.display = 'none';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Load admin data
+        function loadAdminData() {
+            // Load messages
+            const messages = JSON.parse(localStorage.getItem('messages')) || [
+                { name: "Sarah Johnson", email: "sarah@example.com", subject: "Inquiry about soul bags", message: "I would like to know more about your soul bags collection and pricing.", date: "2023-10-15", status: "new" },
+                { name: "Michelle Rodriguez", email: "michelle@example.com", subject: "Hair appointment", message: "I would like to book a hair styling appointment for next week.", date: "2023-10-14", status: "read" },
+                { name: "David Chen", email: "david@example.com", subject: "Corporate order", message: "We are interested in placing a bulk order for soul bags as corporate gifts.", date: "2023-10-12", status: "replied" }
+            ];
+            
+            document.getElementById('total-messages').textContent = messages.length;
+            
+            const messagesTable = document.getElementById('messages-table');
+            messagesTable.innerHTML = '';
+            
+            messages.forEach((message, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${message.name}</td>
+                    <td>${message.email}</td>
+                    <td>${message.subject}</td>
+                    <td>${message.date}</td>
+                    <td><span class="status-${message.status}">${message.status}</span></td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewMessage(${index})">View</button>
+                        <button class="action-btn btn-edit" onclick="markAsRead(${index})">Mark Read</button>
+                        <button class="action-btn btn-delete" onclick="deleteMessage(${index})">Delete</button>
+                    </td>
+                `;
+                messagesTable.appendChild(row);
+            });
+            
+            // Load portfolio items
+            const portfolio = JSON.parse(localStorage.getItem('portfolio')) || [
+                { title: "Floral Soul Bag", category: "clothing", date: "2023-10-15", status: "published" },
+                { title: "Elegant Updo", category: "hair", date: "2023-10-12", status: "published" },
+                { title: "Bridal Makeup", category: "makeup", date: "2023-10-10", status: "draft" }
+            ];
+            
+            document.getElementById('total-posts').textContent = portfolio.length;
+            
+            const portfolioTable = document.getElementById('portfolio-table');
+            portfolioTable.innerHTML = '';
+            
+            portfolio.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.title}</td>
+                    <td>${item.category}</td>
+                    <td>${item.date}</td>
+                    <td><span class="status-${item.status}">${item.status}</span></td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewPortfolioItem(${index})">View</button>
+                        <button class="action-btn btn-edit" onclick="editPortfolioItem(${index})">Edit</button>
+                        <button class="action-btn btn-delete" onclick="deletePortfolioItem(${index})">Delete</button>
+                    </td>
+                `;
+                portfolioTable.appendChild(row);
+            });
+            
+            // Load users (dummy data for demo)
+            const users = [
+                { name: "Sarah Johnson", email: "sarah@example.com", date: "2023-09-20", status: "active" },
+                { name: "Michelle Rodriguez", email: "michelle@example.com", date: "2023-09-25", status: "active" },
+                { name: "David Chen", email: "david@example.com", date: "2023-10-05", status: "active" },
+                { name: "Robert Wilson", email: "robert@example.com", date: "2023-10-08", status: "inactive" }
+            ];
+            
+            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('new-this-week').textContent = 2; // Dummy value
+            
+            const usersTable = document.getElementById('users-table');
+            usersTable.innerHTML = '';
+            
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.date}</td>
+                    <td><span class="status-${user.status}">${user.status}</span></td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewUser(${index})">View</button>
+                        <button class="action-btn btn-edit" onclick="editUser(${index})">Edit</button>
+                        <button class="action-btn btn-delete" onclick="deleteUser(${index})">Delete</button>
+                    </td>
+                `;
+                usersTable.appendChild(row);
+            });
+            
+            // Load activity data
+            const activities = [
+                { type: "message", content: "New message from Sarah Johnson", time: "2 hours ago" },
+                { type: "user", content: "New user registration: Robert Wilson", time: "5 hours ago" },
+                { type: "portfolio", content: "New portfolio item added: Floral Soul Bag", time: "1 day ago" },
+                { type: "message", content: "Message replied to David Chen", time: "2 days ago" }
+            ];
+            
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = '';
+            
+            activities.forEach(activity => {
+                const item = document.createElement('li');
+                item.className = 'activity-item';
+                
+                let icon = '';
+                if (activity.type === 'message') icon = 'fas fa-envelope';
+                else if (activity.type === 'user') icon = 'fas fa-user-plus';
+                else if (activity.type === 'portfolio') icon = 'fas fa-image';
+                
+                item.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div>${activity.content}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                activityList.appendChild(item);
+            });
+            
+            // Generate charts
+            generateVisitorsChart();
+            generateServicesChart();
+        }
+
+        // Generate Visitors Chart
+        function generateVisitorsChart() {
+            const chart = document.getElementById('visitors-chart');
+            chart.innerHTML = '';
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const visitors = [120, 150, 180, 200, 240, 300, 350, 320, 280, 250, 220, 200];
+            
+            const maxVisitors = Math.max(...visitors);
+            
+            months.forEach((month, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${(visitors[index] / maxVisitors) * 100}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = month;
+                
+                bar.appendChild(label);
+                chart.appendChild(bar);
+            });
+        }
+
+        // Generate Services Chart
+        function generateServicesChart() {
+            const chart = document.getElementById('services-chart');
+            chart.innerHTML = '';
+            
+            const services = ['Soul Bags', 'Hair Styling', 'Makeup'];
+            const popularity = [65, 25, 10];
+            
+            const maxPopularity = Math.max(...popularity);
+            
+            services.forEach((service, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${(popularity[index] / maxPopularity) * 100}%`;
+                bar.style.background = `linear-gradient(to top, var(--primary), ${index === 0 ? 'var(--secondary)' : index === 1 ? 'var(--accent)' : '#ffd700'})`;
+                
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = service;
+                
+                bar.appendChild(label);
+                chart.appendChild(bar);
+            });
+        }
+
+        // Add new portfolio item
+        document.getElementById('add-portfolio-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('post-title').value;
+            const category = document.getElementById('post-category').value;
+            const image = document.getElementById('post-image').value;
+            const description = document.getElementById('post-description').value;
+            
+            const newItem = {
+                title,
+                category,
+                image,
+                description,
+                date: new Date().toISOString().split('T')[0],
+                status: 'published'
+            };
+            
+            let portfolio = JSON.parse(localStorage.getItem('portfolio')) || [];
+            portfolio.push(newItem);
+            localStorage.setItem('portfolio', JSON.stringify(portfolio));
+            
+            // Reset form and close modal
+            this.reset();
+            document.getElementById('add-portfolio-modal').style.display = 'none';
+            
+            // Reload admin data
+            loadAdminData();
+            
+            alert('New portfolio item added successfully!');
+        });
+
+        // View message details
+        function viewMessage(index) {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            const message = messages[index];
+            
+            const messageDetails = document.getElementById('message-details');
+            messageDetails.innerHTML = `
+                <div class="form-row">
+                    <label>Name</label>
+                    <div class="form-control" style="background: white;">${message.name}</div>
+                </div>
+                <div class="form-row">
+                    <label>Email</label>
+                    <div class="form-control" style="background: white;">${message.email}</div>
+                </div>
+                <div class="form-row">
+                    <label>Subject</label>
+                    <div class="form-control" style="background: white;">${message.subject}</div>
+                </div>
+                <div class="form-row">
+                    <label>Date</label>
+                    <div class="form-control" style="background: white;">${message.date}</div>
+                </div>
+                <div class="form-row">
+                    <label>Message</label>
+                    <div class="form-control" style="background: white; min-height: 100px;">${message.message}</div>
+                </div>
+                <div class="form-row">
+                    <button class="btn btn-primary" onclick="replyToMessage('${message.email}')">Reply</button>
+                </div>
+            `;
+            
+            document.getElementById('view-message-modal').style.display = 'flex';
+        }
+
+        // Mark message as read
+        function markAsRead(index) {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            if (messages[index]) {
+                messages[index].status = 'read';
+                localStorage.setItem('messages', JSON.stringify(messages));
+                loadAdminData();
+            }
+        }
+
+        // Delete message
+        function deleteMessage(index) {
+            if (confirm('Are you sure you want to delete this message?')) {
+                const messages = JSON.parse(localStorage.getItem('messages')) || [];
+                messages.splice(index, 1);
+                localStorage.setItem('messages', JSON.stringify(messages));
+                loadAdminData();
+            }
+        }
+
+        // Reply to message
+        function replyToMessage(email) {
+            window.location.href = `mailto:${email}`;
+        }
+
+        // Portfolio item functions
+        function viewPortfolioItem(index) {
+            const portfolio = JSON.parse(localStorage.getItem('portfolio')) || [];
+            const item = portfolio[index];
+            alert(`Viewing: ${item.title}\nCategory: ${item.category}\nDescription: ${item.description}`);
+        }
+
+        function editPortfolioItem(index) {
+            const portfolio = JSON.parse(localStorage.getItem('portfolio')) || [];
+            const item = portfolio[index];
+            alert(`Editing: ${item.title}`);
+            // In a real application, this would open an edit form
+        }
+
+        function deletePortfolioItem(index) {
+            if (confirm('Are you sure you want to delete this portfolio item?')) {
+                const portfolio = JSON.parse(localStorage.getItem('portfolio')) || [];
+                portfolio.splice(index, 1);
+                localStorage.setItem('portfolio', JSON.stringify(portfolio));
+                loadAdminData();
+            }
+        }
+
+        // User functions
+        function viewUser(index) {
+            const users = [
+                { name: "Sarah Johnson", email: "sarah@example.com", date: "2023-09-20", status: "active", phone: "+1 (555) 123-4567" },
+                { name: "Michelle Rodriguez", email: "michelle@example.com", date: "2023-09-25", status: "active", phone: "+1 (555) 234-5678" },
+                { name: "David Chen", email: "david@example.com", date: "2023-10-05", status: "active", phone: "+1 (555) 345-6789" },
+                { name: "Robert Wilson", email: "robert@example.com", date: "2023-10-08", status: "inactive", phone: "+1 (555) 456-7890" }
+            ];
+            
+            const user = users[index];
+            alert(`User Details:\nName: ${user.name}\nEmail: ${user.email}\nPhone: ${user.phone}\nStatus: ${user.status}\nJoin Date: ${user.date}`);
+        }
+
+        function editUser(index) {
+            const users = [
+                { name: "Sarah Johnson", email: "sarah@example.com", date: "2023-09-20", status: "active" },
+                { name: "Michelle Rodriguez", email: "michelle@example.com", date: "2023-09-25", status: "active" },
+                { name: "David Chen", email: "david@example.com", date: "2023-10-05", status: "active" },
+                { name: "Robert Wilson", email: "robert@example.com", date: "2023-10-08", status: "inactive" }
+            ];
+            
+            const user = users[index];
+            alert(`Editing user: ${user.name}`);
+            // In a real application, this would open an edit form
+        }
+
+        function deleteUser(index) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                alert('User deleted (simulated)');
+                // In a real application, this would remove the user from the database
+            }
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in (for demo purposes)
+            // In a real application, this would check for a valid session
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (isLoggedIn) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                loadAdminData();
+            }
+        });
+    </script>
+</body>
+</html>
